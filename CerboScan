@@ -1,0 +1,111 @@
+// Router, CCTV, and Smart Device Scanner Script
+// Scans routers for firewall rules, CCTV cameras (port 37777), smart devices (port 1883), and lists detected device LAN IPs
+
+scan_network_devices = function()
+    user_router = get_router() // Get the user's router
+    lan_ips = user_router.devices_lan_ip // Get all LAN IPs connected to this router
+    routers = [] // List to store details of routers with firewall rules, CCTV count, and smart device count
+
+    print("<color=#00FFFF><b>--- Starting Network Scan ---</b></color>\n")
+
+    // Iterate over each LAN IP and check for firewall rules, CCTV cameras, and smart devices
+    for ip in lan_ips
+        router = get_router(ip) // Get router object for each IP
+        if not router then continue // Skip if router is not found
+
+        // Check for firewall rules if available
+        firewall_rules = []
+        if router.firewall_rules then
+            firewall_rules = router.firewall_rules // Retrieve firewall rules if supported
+        end if
+
+        // Count CCTV cameras (devices with port 37777 open), smart devices (port 1883 open), and others
+        cctv_count = 0
+        smart_device_count = 0
+        ftp_server_count = 0
+        http_server_count = 0
+        sql_server_count = 0
+        ssh_server_count = 0
+        mail_server_count = 0
+        device_list = [] // List of devices detected
+
+        for device_ip in router.devices_lan_ip // Iterate over devices on the router's network
+            device_ports = router.device_ports(device_ip) // Get ports for each device
+            device_info = {"ip": device_ip, "open_ports": []}
+
+            for port in device_ports
+                if not port.is_closed then
+                    device_info["open_ports"].push(port.port_number) // Track open ports for this device
+
+                    // Increment counters for specific device types
+                    if port.port_number == 37777 then
+                        cctv_count = cctv_count + 1
+                    end if
+                    if port.port_number == 1883 then
+                        smart_device_count = smart_device_count + 1
+                    end if
+                    if port.port_number == 21 then
+                        ftp_server_count = ftp_server_count + 1
+                    end if
+                    if port.port_number == 80 then
+                        http_server_count = http_server_count + 1
+                    end if
+                    if port.port_number == 3306 then
+                        sql_server_count = sql_server_count + 1
+                    end if
+                    if port.port_number == 22 then
+                        ssh_server_count = ssh_server_count + 1
+                    end if
+                    if port.port_number == 25 then
+                        mail_server_count = mail_server_count + 1
+                    end if
+                end if
+            end for
+
+            // Add device to list
+            device_list.push(device_info)
+        end for
+
+        // Store router info with IP, firewall rules, and detected device details
+        routers.push({
+            "ip": ip,"firewall_rules": firewall_rules, "cctv_count": cctv_count, "smart_device_count": smart_device_count, "ftp_server_count": ftp_server_count, "http_server_count": http_server_count, "sql_server_count": sql_server_count, "ssh_server_count": ssh_server_count, "mail_server_count": mail_server_count, "devices": device_list})
+    end for
+
+    // Print summary in a graphical format
+    print("\n<color=#00FF00><b>--- Network Configuration Summary ---</b></color>\n")
+    for entry in routers
+        print("<b>Router IP:</b> <color=#FFD700>" + entry["ip"] + "</color>") // Display router IP
+
+        print("<b>Firewall Rules:</b>")
+        if entry["firewall_rules"].len > 0 then
+            for rule in entry["firewall_rules"]
+                print("  - <color=#FFFFFF>" + rule + "</color>") // Print each rule
+            end for
+        else
+            print("  <color=#FF0000>No firewall rules detected</color>")
+        end if
+
+        // Display detected devices and their LAN IPs
+        print("<b>Connected Devices:</b>")
+        for device in entry["devices"]
+            print("  - Device IP: <color=#ADD8E6>" + device["ip"] + "</color> | Open Ports: <color=#90EE90>" + device["open_ports"].join(", ") + "</color>")
+        end for
+
+        // Display CCTV, smart device, and server counts
+        print("<b>CCTV Cameras Detected:</b> <color=#FFD700>" + entry["cctv_count"] + "</color>")
+        print("<b>Smart Devices Detected:</b> <color=#FFD700>" + entry["smart_device_count"] + "</color>")
+        print("<b>FTP Servers Detected:</b> <color=#FFD700>" + entry["ftp_server_count"] + "</color>")
+        print("<b>HTTP Servers Detected:</b> <color=#FFD700>" + entry["http_server_count"] + "</color>")
+        print("<b>SQL Servers Detected:</b> <color=#FFD700>" + entry["sql_server_count"] + "</color>")
+        print("<b>SSH Servers Detected:</b> <color=#FFD700>" + entry["ssh_server_count"] + "</color>")
+        print("<b>Mail Servers Detected:</b> <color=#FFD700>" + entry["mail_server_count"] + "</color>")
+        print("<color=#00FFFF>" + "-" * 40 + "</color>") // Separator between entries
+    end for
+
+    if routers.len == 0 then
+        print("<color=#FF0000>No routers with firewall rules, CCTV cameras, or smart devices found on the network.</color>")
+    end if
+end function
+
+// Run the network device scan
+scan_network_devices()
