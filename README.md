@@ -3,6 +3,7 @@ This is a greyhack network scanner for local networks in greyhack.
 
 # Description
 <br>CerboScan is a network scanner for greyhack that lists out firewalls and servers on the network and shows their lan ip's on the network.</br>
+<br>PS: This only can scan devices connected to a router and not devices connected to a Switch as it will error out.</br>
 
 # CerboScan Pictures
 <br>CerboScan Output After Network Is Scanned.<br>
