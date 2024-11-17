@@ -1,6 +1,3 @@
-// Router, CCTV, and Smart Device Scanner Script
-// Scans routers for firewall rules, CCTV cameras (port 37777), smart devices (port 1883), and lists detected device LAN IPs
-
 scan_network_devices = function()
     user_router = get_router() // Get the user's router
     lan_ips = user_router.devices_lan_ip // Get all LAN IPs connected to this router
@@ -10,6 +7,13 @@ scan_network_devices = function()
 
     // Iterate over each LAN IP and check for firewall rules, CCTV cameras, and smart devices
     for ip in lan_ips
+        switch = get_switch(ip) // Check if the IP corresponds to a switch
+        if switch then
+            print("<color=#FF0000>Switch detected at IP:</color> <b>" + ip + "</b>\n")
+            print("<color=#FFA500>Switches are skipped from scanning.</color>\n")
+            continue // Skip further processing for switches
+        end if
+
         router = get_router(ip) // Get router object for each IP
         if not router then continue // Skip if router is not found
 
@@ -34,7 +38,7 @@ scan_network_devices = function()
             device_info = {"ip": device_ip, "open_ports": []}
 
             for port in device_ports
-                if not port.is_closed then
+                if port and port.is_closed == 0 then // Check if the port is open
                     device_info["open_ports"].push(port.port_number) // Track open ports for this device
 
                     // Increment counters for specific device types
@@ -67,8 +71,7 @@ scan_network_devices = function()
         end for
 
         // Store router info with IP, firewall rules, and detected device details
-        routers.push({
-            "ip": ip,"firewall_rules": firewall_rules, "cctv_count": cctv_count, "smart_device_count": smart_device_count, "ftp_server_count": ftp_server_count, "http_server_count": http_server_count, "sql_server_count": sql_server_count, "ssh_server_count": ssh_server_count, "mail_server_count": mail_server_count, "devices": device_list})
+        routers.push({"ip": ip, "firewall_rules": firewall_rules, "cctv_count": cctv_count, "smart_device_count": smart_device_count, "ftp_server_count": ftp_server_count, "http_server_count": http_server_count, "sql_server_count": sql_server_count, "ssh_server_count": ssh_server_count, "mail_server_count": mail_server_count, "devices": device_list})
     end for
 
     // Print summary in a graphical format
