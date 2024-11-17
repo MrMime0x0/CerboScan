@@ -8,3 +8,6 @@ This is a greyhack network scanner for local networks in greyhack.
 # CerboScan Pictures
 <br>CerboScan Output After Network Is Scanned.<br>
 ![CerboScan](https://github.com/user-attachments/assets/6dc4207b-bb0b-43ad-9b21-a50b143f0dc6)
+
+# CerboScan Script Update
+<br>Switches are now skipped when scanning a network and the switch ip's are listed on the script when executed.<br>
