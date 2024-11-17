@@ -11,3 +11,7 @@ This is a greyhack network scanner for local networks in greyhack.
 
 # CerboScan Script Update
 <br>Switches are now skipped when scanning a network and the switch ip's are listed on the script when executed.<br>
+
+# Updated CerboScan Script Pictures
+<br>The prompt when a switch is skipped in scanning is shown below.</br>
+![SwitchSkip](https://github.com/user-attachments/assets/2a42727c-0fcf-4c96-914a-5977eba2db9f)
