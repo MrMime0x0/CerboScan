@@ -31,6 +31,7 @@ scan_network_devices = function()
         sql_server_count = 0
         ssh_server_count = 0
         mail_server_count = 0
+        adb_server_count = 0
         device_list = [] // List of devices detected
 
         for device_ip in router.devices_lan_ip // Iterate over devices on the router's network
@@ -63,6 +64,9 @@ scan_network_devices = function()
                     if port.port_number == 25 then
                         mail_server_count = mail_server_count + 1
                     end if
+                    if port.port_number == 5555 then
+                        adb_server_count = adb_server_count + 1
+                    end if
                 end if
             end for
 
@@ -71,7 +75,7 @@ scan_network_devices = function()
         end for
 
         // Store router info with IP, firewall rules, and detected device details
-        routers.push({"ip": ip, "firewall_rules": firewall_rules, "cctv_count": cctv_count, "smart_device_count": smart_device_count, "ftp_server_count": ftp_server_count, "http_server_count": http_server_count, "sql_server_count": sql_server_count, "ssh_server_count": ssh_server_count, "mail_server_count": mail_server_count, "devices": device_list})
+        routers.push({"ip": ip, "firewall_rules": firewall_rules, "cctv_count": cctv_count, "smart_device_count": smart_device_count, "ftp_server_count": ftp_server_count, "http_server_count": http_server_count, "sql_server_count": sql_server_count, "ssh_server_count": ssh_server_count, "mail_server_count": mail_server_count, "adb_server_count": adb_server_count, "devices": device_list})
     end for
 
     // Print summary in a graphical format
@@ -102,6 +106,7 @@ scan_network_devices = function()
         print("<b>SQL Servers Detected:</b> <color=#FFD700>" + entry["sql_server_count"] + "</color>")
         print("<b>SSH Servers Detected:</b> <color=#FFD700>" + entry["ssh_server_count"] + "</color>")
         print("<b>Mail Servers Detected:</b> <color=#FFD700>" + entry["mail_server_count"] + "</color>")
+        print("<b>ADB Servers Detected:</b> <color=#FFD700>" + entry["adb_server_count"] + "</color>")
         print("<color=#00FFFF>" + "-" * 40 + "</color>") // Separator between entries
     end for
 
