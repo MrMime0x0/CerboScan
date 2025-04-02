@@ -18,5 +18,3 @@ This is a greyhack network scanner for local networks in greyhack.
 
 # Change Logs
 <br>Added port 5555/ADB to scanning - CerboScan Updated On April 1 2025<br>
-<br>Updated Cerboscan ADB/5555 Picture Below</br>
-<img width="224" alt="ADBScan" src="https://github.com/user-attachments/assets/2e906743-267b-43a0-9688-f73bb4267887" />
