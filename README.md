@@ -15,3 +15,6 @@ This is a greyhack network scanner for local networks in greyhack.
 # Updated CerboScan Script Pictures
 <br>The prompt when a switch is skipped in scanning is shown below:</br>
 ![SwitchSkip](https://github.com/user-attachments/assets/2a42727c-0fcf-4c96-914a-5977eba2db9f)
+
+# Change Logs
+<br>1: Added port 5555 or ADB to CerboScan this is changed number 0.0.1/Cerbo - Updated On April 1 2025<br>
